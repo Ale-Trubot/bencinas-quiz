@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>¿Cuánto te pega el alza del jueves?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafaf7;
+  --ink: #1a1917;
+  --ink2: #3d3b37;
+  --muted: #7a7570;
+  --line: #e2ddd6;
+  --amber: #c8620a;
+  --amber-light: #fdf3eb;
+  --amber-border: #f0d5bc;
+  --green: #1a6b3a;
+  --green-light: #edf5f0;
+  --selected: #1a1917;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  min-height: 100%;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--line);
+  z-index: 200;
+}
+#progress-bar {
+  height: 100%;
+  background: var(--amber);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+}
+
+/* ── HEADER ── */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  margin-top: 3px;
+}
+.site-header-logo {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.45;
+}
+.site-header-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  border: 1px solid var(--amber);
+  padding: 3px 8px;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display: none;
+  animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.screen.active { display: flex; flex-direction: column; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════
+   INTRO SCREEN
+══════════════════════════════════ */
+#screen-intro {
+  min-height: calc(100dvh - 52px);
+  padding: 36px 20px 40px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.intro-top {}
+
+.intro-kicker {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.intro-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 16px; height: 2px;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.intro-hed {
+  font-family: 'Lora', serif;
+  font-size: clamp(30px, 8vw, 48px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.intro-hed em { font-style: italic; color: var(--amber); }
+
+.intro-dek {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink2);
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+.intro-dek strong { font-weight: 600; color: var(--ink); }
+
+.intro-note {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.intro-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+.intro-stat {
+  background: var(--bg);
+  padding: 14px 12px;
+}
+.intro-stat-val {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.intro-stat-lab {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.btn-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 18px 24px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+  padding-bottom: calc(18px + var(--safe-bottom));
+}
+.btn-start:active { background: var(--amber); }
+
+/* ══════════════════════════════════
+   QUESTION SCREEN
+══════════════════════════════════ */
+#screen-q {
+  min-height: calc(100dvh - 52px);
+  padding: 0;
+  flex-direction: column;
+}
+
+.q-header {
+  padding: 28px 20px 20px;
+  flex-shrink: 0;
+}
+.q-num {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.q-text {
+  font-family: 'Lora', serif;
+  font-size: clamp(22px, 6vw, 30px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.q-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.options {
+  flex: 1;
+  padding: 4px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 16px;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: 'IBM Plex Sans', sans-serif;
+  border-radius: 2px;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.12s, background 0.12s;
+  min-height: 64px;
+}
+.option:active {
+  border-color: var(--ink);
+  background: #f0ece3;
+}
+.option.selected {
+  border-color: var(--selected);
+  background: var(--selected);
+}
+.option-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+  line-height: 1;
+}
+.option-body { flex: 1; min-width: 0; }
+.option-label {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+  display: block;
+}
+.option.selected .option-label { color: var(--bg); }
+.option-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.option.selected .option-sub { color: rgba(250,250,247,0.6); }
+.option-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+}
+.option.selected .option-check {
+  background: var(--bg);
+  border-color: var(--bg);
+}
+.option.selected .option-check::after {
+  content: '';
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.q-spacer { height: 24px; flex-shrink: 0; }
+
+/* ══════════════════════════════════
+   RESULT SCREEN
+══════════════════════════════════ */
+#screen-result {
+  flex-direction: column;
+  padding-bottom: calc(40px + var(--safe-bottom));
+}
+
+.result-wrap { padding: 28px 20px 0; }
+
+.result-kicker {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.result-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 16px; height: 2px;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.result-hed {
+  font-family: 'Lora', serif;
+  font-size: clamp(16px, 4.5vw, 21px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink2);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+/* Hero amount */
+.result-total-box {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 26px 22px 22px;
+  margin: 16px 0 24px;
+  position: relative;
+  overflow: hidden;
+}
+.result-total-box::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; right: -50px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(200,98,10,0.12);
+  pointer-events: none;
+}
+.result-total-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250,250,247,0.45);
+  margin-bottom: 10px;
+}
+.result-total-amount {
+  font-family: 'Lora', serif;
+  font-size: clamp(52px, 14vw, 72px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.result-total-amount .cur {
+  font-size: 42%;
+  font-weight: 400;
+  vertical-align: super;
+  color: var(--amber);
+  margin-right: 2px;
+}
+.result-total-amount .per {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(250,250,247,0.5);
+  display: block;
+  margin-top: 8px;
+  letter-spacing: 0;
+}
+.result-total-range {
+  font-size: 11px;
+  color: rgba(250,250,247,0.38);
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Breakdown */
+.breakdown-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.breakdown-items {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.breakdown-item:last-child { border-bottom: none; }
+.bi-icon { font-size: 18px; flex-shrink: 0; width: 26px; text-align: center; }
+.bi-label { flex: 1; min-width: 0; }
+.bi-label strong {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.3;
+}
+.bi-label span {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+  display: block;
+  margin-top: 1px;
+}
+.bi-amount {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--amber);
+  flex-shrink: 0;
+  text-align: right;
+}
+.bi-amount.zero { color: var(--muted); }
+.bi-amount.positive { color: var(--green); }
+
+/* Equivalencias */
+.equiv-section {
+  background: var(--amber-light);
+  border: 1px solid var(--amber-border);
+  padding: 20px 18px;
+  margin-bottom: 24px;
+}
+.equiv-section-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+.equiv-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.equiv-item:last-child { margin-bottom: 0; }
+.equiv-item::before {
+  content: '→';
+  color: var(--amber);
+  font-weight: 600;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+/* Medidas del gobierno */
+.medidas-box {
+  background: var(--green-light);
+  border: 1px solid #b8d9c4;
+  padding: 18px;
+  margin-bottom: 24px;
+}
+.medidas-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+.medida-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.5;
+  align-items: flex-start;
+}
+.medida-item:last-child { margin-bottom: 0; }
+.medida-item::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Actions */
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.btn-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--amber);
+  color: white;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 17px 24px;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+.btn-share:active { background: #a8520a; }
+.btn-restart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 24px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.result-footnote {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-bottom: 8px;
+}
+
+/* stagger */
+.breakdown-item:nth-child(1) { animation-delay: 0.00s; }
+.breakdown-item:nth-child(2) { animation-delay: 0.07s; }
+.breakdown-item:nth-child(3) { animation-delay: 0.14s; }
+.breakdown-item:nth-child(4) { animation-delay: 0.21s; }
+.breakdown-item:nth-child(5) { animation-delay: 0.28s; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<header class="site-header">
+  <div class="site-header-logo">Interactivo</div>
+  <div class="site-header-tag">Alza combustibles · Jueves 26</div>
+</header>
+
+<!-- ══════════════ INTRO ══════════════ -->
+<div id="screen-intro" class="screen active">
+  <div class="intro-top">
+    <div class="intro-kicker">Herramienta interactiva</div>
+    <h1 class="intro-hed">¿Cuánto te va a costar el alza <em>del jueves?</em></h1>
+    <p class="intro-dek">El 26 de marzo, las bencinas suben <strong>$370/litro</strong> y el diésel <strong>$580/litro</strong>. Tengas auto o no, el alza llega a tu bolsillo.</p>
+    <p class="intro-note">6 preguntas simples — calculamos tu impacto real, incluyendo lo que quizás no estás viendo.</p>
+
+    <div class="intro-stats">
+      <div class="intro-stat">
+        <div class="intro-stat-val">+32%</div>
+        <div class="intro-stat-lab">sube la bencina 93 octanos</div>
+      </div>
+      <div class="intro-stat">
+        <div class="intro-stat-val">+62%</div>
+        <div class="intro-stat-lab">sube el diésel este jueves</div>
+      </div>
+      <div class="intro-stat">
+        <div class="intro-stat-val">Baja</div>
+        <div class="intro-stat-lab">la parafina por medida del gobierno</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="startQuiz()">
+    Calcular mi impacto
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<!-- ══════════════ PREGUNTAS ══════════════ -->
+<div id="screen-q" class="screen">
+  <div class="q-header">
+    <div class="q-num" id="q-num-label">Pregunta 1 de 6</div>
+    <h2 class="q-text" id="q-text"></h2>
+    <p class="q-sub" id="q-sub"></p>
+  </div>
+  <div class="options" id="options-container"></div>
+  <div class="q-spacer"></div>
+</div>
+
+<!-- ══════════════ RESULTADO ══════════════ -->
+<div id="screen-result" class="screen">
+  <div class="result-wrap">
+    <div class="result-kicker">Tu resultado</div>
+    <div class="result-hed" id="result-hed"></div>
+
+    <div class="result-total-box">
+      <div class="result-total-label">Impacto mensual estimado</div>
+      <div class="result-total-amount">
+        <span class="cur">$</span><span id="total-number">0</span>
+        <span class="per">pesos más al mes que hoy</span>
+      </div>
+      <div class="result-total-range" id="total-range-text"></div>
+    </div>
+
+    <div class="breakdown-label">¿De dónde viene?</div>
+    <div class="breakdown-items" id="breakdown-items"></div>
+
+    <div class="equiv-section" id="equiv-section">
+      <div class="equiv-section-label">En términos concretos…</div>
+      <div id="equiv-content"></div>
+    </div>
+
+    <div class="medidas-box">
+      <div class="medidas-label">Medidas del gobierno que te alivian</div>
+      <div id="medidas-content"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-share" onclick="shareResult()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 2.667a1.333 1.333 0 1 0 0 2.666A1.333 1.333 0 0 0 12 2.667zm-8 4a1.333 1.333 0 1 0 0 2.666A1.333 1.333 0 0 0 4 6.667zm8 4a1.333 1.333 0 1 0 0 2.666A1.333 1.333 0 0 0 12 10.667zM5.273 7.727L10.74 5M5.273 9.06l5.454 2.607" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Compartir resultado
+      </button>
+      <button class="btn-restart" onclick="restartQuiz()">Volver a calcular</button>
+    </div>
+
+    <p class="result-footnote">
+      Cifras basadas en el alza confirmada por el Ministerio de Hacienda (26 marzo 2026): +$370/litro gasolinas y +$580/litro diésel. Precios actuales referenciados en RM según ENAP/CNE. Los impactos indirectos son proyecciones estimadas. Valores varían por región y establecimiento.
+    </p>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────
+//  PRECIOS REALES (RM, ENAP vigente)
+// ──────────────────────────────────────────
+const COMBUSTIBLES = {
+  '93':     { before: 1169, alza: 370 },
+  '95':     { before: 1210, alza: 370 },
+  '97':     { before: 1250, alza: 370 },
+  'diesel': { before: 932,  alza: 580 },
+};
+
+// ──────────────────────────────────────────
+//  PREGUNTAS
+// ──────────────────────────────────────────
+const QUESTIONS = [
+  {
+    id: 'q_auto',
+    text: '¿Tienes auto, camioneta o moto propios?',
+    sub: 'No importa la marca ni el año — solo si lo usas regularmente.',
+    options: [
+      { icon: '🚗', label: 'Sí, lo uso casi todos los días', sub: 'Para trabajar, hacer trámites, llevar a los niños…', value: 'diario',     next: 'q_combustible' },
+      { icon: '🅿️', label: 'Sí, pero lo uso poco',          sub: 'Fines de semana o salidas ocasionales.',             value: 'esporadico', next: 'q_combustible' },
+      { icon: '🚶', label: 'No tengo vehículo propio',       sub: 'Me muevo en metro, micro, a pie u otros.',           value: 'no',         next: 'q_apps' },
+    ]
+  },
+  {
+    id: 'q_combustible',
+    text: '¿Qué combustible usa tu vehículo?',
+    sub: 'Si tienes más de uno, elige el que usas más seguido.',
+    options: [
+      { icon: '⛽', label: 'Bencina 93',       sub: 'La más común en autos pequeños y medianos.', value: '93',     next: 'q_apps' },
+      { icon: '⛽', label: 'Bencina 95 o 97',  sub: 'Autos más nuevos o de mayor cilindrada.',    value: '95',     next: 'q_apps' },
+      { icon: '🛻', label: 'Diésel',            sub: 'Camionetas, SUVs, vehículos de trabajo.',   value: 'diesel', next: 'q_apps' },
+    ]
+  },
+  {
+    id: 'q_apps',
+    text: '¿Usas Uber, Cabify o taxis con frecuencia?',
+    sub: 'Para ir al trabajo, salir en la noche o hacer diligencias.',
+    options: [
+      { icon: '📱', label: 'Sí, varias veces a la semana', sub: 'Es mi transporte principal.',                   value: 'frecuente', next: 'q_calefaccion' },
+      { icon: '🤳', label: 'Una o dos veces a la semana',  sub: 'Cuando no quiero manejar o hay mucho tráfico.', value: 'moderado',  next: 'q_calefaccion' },
+      { icon: '✋', label: 'Casi nunca o nunca',            sub: '',                                              value: 'no',        next: 'q_calefaccion' },
+    ]
+  },
+  {
+    id: 'q_calefaccion',
+    text: '¿Calientas tu hogar con parafina o estufa a kerosene?',
+    sub: 'Hay buenas noticias al respecto — el gobierno tomó una medida.',
+    options: [
+      { icon: '🔥', label: 'Sí, es mi calefacción principal', sub: 'Mi hogar depende de ella en invierno.',          value: 'principal',   next: 'q_delivery' },
+      { icon: '🌡️', label: 'La uso como complemento',         sub: 'Junto con otro tipo de calefacción.',            value: 'complemento', next: 'q_delivery' },
+      { icon: '❄️', label: 'No uso parafina',                  sub: 'Tengo otra calefacción o no calefacciono.',     value: 'no',          next: 'q_delivery' },
+    ]
+  },
+  {
+    id: 'q_delivery',
+    text: '¿Pides delivery a domicilio?',
+    sub: 'Comida, farmacia, supermercado, encomiendas…',
+    options: [
+      { icon: '📦', label: 'Sí, varias veces a la semana', sub: 'Rappi, PedidosYa, Uber Eats, farmacias…', value: 'frecuente', next: 'q_bus' },
+      { icon: '🛵', label: 'Una o dos veces a la semana',  sub: '',                                          value: 'moderado',  next: 'q_bus' },
+      { icon: '🏠', label: 'Rara vez o nunca',             sub: '',                                          value: 'no',        next: 'q_bus' },
+    ]
+  },
+  {
+    id: 'q_bus',
+    text: '¿Viajas en bus interurbano a otras ciudades?',
+    sub: 'Feriados largos, vacaciones, visitas a regiones…',
+    options: [
+      { icon: '🚌', label: 'Sí, varias veces al año',      sub: 'Me muevo seguido entre ciudades.',          value: 'frecuente', next: 'result' },
+      { icon: '🎫', label: 'Solo en feriados o vacaciones', sub: 'Una o dos veces al año, máximo.',           value: 'ocasional', next: 'result' },
+      { icon: '✈️', label: 'No viajo en bus interurbano',   sub: 'Viajo en avión, en auto propio o no viajo.', value: 'no',        next: 'result' },
+    ]
+  },
+];
+
+const questionMap = {};
+QUESTIONS.forEach(q => { questionMap[q.id] = q; });
+
+// ──────────────────────────────────────────
+//  STATE
+// ──────────────────────────────────────────
+let answers = {};
+let questionHistory = [];
+let currentQId = null;
+
+// ──────────────────────────────────────────
+//  NAVEGACIÓN
+// ──────────────────────────────────────────
+function startQuiz() {
+  answers = {};
+  questionHistory = [];
+  showQuestion('q_auto');
+  showScreen('screen-q');
+}
+
+function showQuestion(qId) {
+  currentQId = qId;
+  questionHistory.push(qId);
+  const q = questionMap[qId];
+
+  const visibleTotal = answers['q_auto'] === 'no' ? 5 : 6;
+  const visibleNum   = questionHistory.length;
+
+  document.getElementById('q-num-label').textContent = `Pregunta ${visibleNum} de ${visibleTotal}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-sub').textContent  = q.sub || '';
+
+  const cont = document.getElementById('options-container');
+  cont.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `
+      <span class="option-icon">${opt.icon}</span>
+      <span class="option-body">
+        <span class="option-label">${opt.label}</span>
+        ${opt.sub ? `<span class="option-sub">${opt.sub}</span>` : ''}
+      </span>
+      <span class="option-check"></span>
+    `;
+    btn.addEventListener('click', () => selectOption(opt, btn));
+    cont.appendChild(btn);
+  });
+
+  const total = answers['q_auto'] === 'no' ? 5 : 6;
+  document.getElementById('progress-bar').style.width = ((visibleNum - 1) / total * 100) + '%';
+
+  const screen = document.getElementById('screen-q');
+  screen.classList.remove('active');
+  void screen.offsetWidth;
+  screen.classList.add('active');
+}
+
+function selectOption(opt, btn) {
+  document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[currentQId] = opt.value;
+
+  setTimeout(() => {
+    if (opt.next === 'result') showResult();
+    else showQuestion(opt.next);
+  }, 260);
+}
+
+// ──────────────────────────────────────────
+//  CÁLCULO
+// ──────────────────────────────────────────
+function calcImpact() {
+  const items = [];
+
+  // 1. AUTO
+  const autoVal = answers['q_auto'];
+  const fuelKey = answers['q_combustible'] || '93';
+  const fuel    = COMBUSTIBLES[fuelKey];
+  const alzaLitro = fuel.alza;
+  const fuelLabel = { '93': 'bencina 93', '95': 'bencina 95/97', 'diesel': 'diésel' }[fuelKey];
+
+  if (autoVal === 'diario') {
+    const litros = 80;
+    const amount = litros * alzaLitro;
+    items.push({ icon: '🚗', label: 'Como conductor habitual', sub: `~${litros} L/mes de ${fuelLabel} · +$${fmt(alzaLitro)}/litro`, amount, max: amount });
+  } else if (autoVal === 'esporadico') {
+    const litros = 28;
+    const amount = litros * alzaLitro;
+    items.push({ icon: '🅿️', label: 'Uso esporádico del vehículo', sub: `~${litros} L/mes estimados · ${fuelLabel}`, amount, max: amount });
+  } else {
+    items.push({ icon: '🚗', label: 'Sin vehículo propio', sub: 'Sin impacto directo en combustible', amount: 0, max: 0 });
+  }
+
+  // 2. APPS
+  const appsVal = answers['q_apps'];
+  if (appsVal === 'frecuente') {
+    items.push({ icon: '📱', label: 'Apps de transporte', sub: 'Tarifas subirán ~5–8% por mayor costo de combustible', amount: 4800, max: 6400 });
+  } else if (appsVal === 'moderado') {
+    items.push({ icon: '📱', label: 'Apps de transporte (ocasional)', sub: '~$300–500 más por viaje estimado', amount: 1600, max: 2400 });
+  } else {
+    items.push({ icon: '📱', label: 'Apps de transporte', sub: 'No impacta tu caso', amount: 0, max: 0 });
+  }
+
+  // 3. PARAFINA — BAJA por medida de gobierno
+  const caVal = answers['q_calefaccion'];
+  if (caVal === 'principal') {
+    items.push({ icon: '🔥', label: 'Parafina (calefacción)', sub: 'El gobierno bajará el precio y lo congelará en otoño/invierno', amount: -800, max: -800, positive: true });
+  } else if (caVal === 'complemento') {
+    items.push({ icon: '🌡️', label: 'Parafina (complemento)', sub: 'Precio congelado bajo $1.000/L — pequeño alivio', amount: -300, max: -300, positive: true });
+  }
+  // Si no usa parafina, no mostramos el ítem
+
+  // 4. DELIVERY
+  const delVal = answers['q_delivery'];
+  if (delVal === 'frecuente') {
+    items.push({ icon: '📦', label: 'Delivery a domicilio', sub: 'Los repartidores trasladarán mayor costo de combustible', amount: 4800, max: 7200 });
+  } else if (delVal === 'moderado') {
+    items.push({ icon: '🛵', label: 'Delivery (ocasional)', sub: '~$300–500 más por pedido estimado', amount: 1600, max: 2400 });
+  } else {
+    items.push({ icon: '🛵', label: 'Delivery', sub: 'Bajo impacto en tu caso', amount: 0, max: 0 });
+  }
+
+  // 5. BUS INTERURBANO (Red congelado; interurbano sí sube)
+  const busVal = answers['q_bus'];
+  if (busVal === 'frecuente') {
+    items.push({ icon: '🚌', label: 'Bus interurbano', sub: 'Tarifas subirán; ~$1.500–3.000 más por viaje ida y vuelta', amount: 1500, max: 2500 });
+  } else if (busVal === 'ocasional') {
+    items.push({ icon: '🎫', label: 'Bus interurbano (feriados)', sub: 'En tu próximo viaje pagarás ~$1.500–2.500 más I+V', amount: 500, max: 700 });
+  } else {
+    items.push({ icon: '🚌', label: 'Bus interurbano', sub: 'No afecta tu movilidad', amount: 0, max: 0 });
+  }
+
+  return items;
+}
+
+// ──────────────────────────────────────────
+//  RESULTADO
+// ──────────────────────────────────────────
+function showResult() {
+  document.getElementById('progress-bar').style.width = '100%';
+  showScreen('screen-result');
+
+  const items  = calcImpact();
+  const total  = items.reduce((s, i) => s + i.amount, 0);
+  const totalMax = items.reduce((s, i) => s + (i.max || 0), 0);
+  const maxAbs = Math.max(...items.map(i => Math.abs(i.amount)), 1);
+
+  // Headline
+  const autoVal = answers['q_auto'];
+  let hed = 'Según cómo te mueves y vives,';
+  if (total <= 0) hed = 'En tu caso, el gobierno amortigua buena parte del impacto.';
+  else if (autoVal === 'diario' && answers['q_combustible'] === 'diesel') hed = 'Como conductor diario de diésel, eres de los más golpeados.';
+  else if (autoVal === 'diario') hed = 'Como conductor diario, sentirás el alza con fuerza.';
+  else if (autoVal === 'no') hed = 'Aunque no tienes auto, el alza igual llega a tu bolsillo.';
+  document.getElementById('result-hed').textContent = hed;
+
+  // Total animado
+  animateCount('total-number', Math.max(total, 0));
+  document.getElementById('total-range-text').textContent =
+    total > 0
+      ? `Rango: $${fmt(Math.round(total * 0.85))} – $${fmt(totalMax)} por mes`
+      : 'El impacto directo en tu caso es muy acotado este mes';
+
+  // Breakdown — solo ítems con impacto o con signo negativo
+  const visibles = items.filter(i => i.amount !== 0);
+  const bd = document.getElementById('breakdown-items');
+  bd.innerHTML = '';
+  if (visibles.length === 0) {
+    bd.innerHTML = '<div class="breakdown-item"><span class="bi-icon">✅</span><span class="bi-label"><strong>Sin impacto directo significativo</strong><span>Tu perfil no tiene exposición relevante a este alza</span></span></div>';
+  } else {
+    visibles.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'breakdown-item';
+      const isPositive = item.positive || item.amount < 0;
+      const amtText = item.amount < 0
+        ? `−$${fmt(Math.abs(item.amount))}`
+        : item.amount > 0 ? `+$${fmt(item.amount)}` : '—';
+      div.innerHTML = `
+        <span class="bi-icon">${item.icon}</span>
+        <span class="bi-label"><strong>${item.label}</strong><span>${item.sub}</span></span>
+        <span class="bi-amount ${item.amount === 0 ? 'zero' : isPositive ? 'positive' : ''}">${amtText}</span>
+      `;
+      bd.appendChild(div);
+    });
+  }
+
+  // Equivalencias
+  buildEquiv(total);
+
+  // Medidas del gobierno relevantes
+  buildMedidas();
+}
+
+function buildEquiv(total) {
+  const cont = document.getElementById('equiv-content');
+  const sect = document.getElementById('equiv-section');
+  if (total <= 500) {
+    sect.style.display = 'none';
+    return;
+  }
+  sect.style.display = '';
+  const annual = total * 12;
+  const coffees  = Math.round(annual / 2200);
+  const almuerzo = Math.round(annual / 4500);
+  const netflix  = (annual / 8990).toFixed(1);
+  const bip      = Math.round(annual / 10000);
+  let html = '';
+  if (coffees > 0)    html += `<div class="equiv-item"><strong>${fmt(coffees)} cafés al año</strong> (a $2.200 c/u)</div>`;
+  if (almuerzo > 0)   html += `<div class="equiv-item"><strong>${fmt(almuerzo)} almuerzos fuera de casa</strong> (a $4.500 c/u)</div>`;
+  if (parseFloat(netflix) >= 0.5) html += `<div class="equiv-item"><strong>${netflix} meses de streaming</strong> (ej: Netflix básico)</div>`;
+  if (bip >= 1)       html += `<div class="equiv-item"><strong>${bip} recargas de tarjeta Bip</strong> de $10.000</div>`;
+  html += `<div class="equiv-item"><strong>$${fmt(annual)} adicionales al año</strong></div>`;
+  cont.innerHTML = html;
+}
+
+function buildMedidas() {
+  const autoVal = answers['q_auto'];
+  const caVal   = answers['q_calefaccion'];
+  const cont    = document.getElementById('medidas-content');
+  let html = '';
+
+  html += `<div class="medida-item">Tarifa del transporte público Red (ex Transantiago) congelada hasta diciembre 2026</div>`;
+
+  if (caVal === 'principal' || caVal === 'complemento') {
+    html += `<div class="medida-item">Parafina baja a niveles de febrero 2026 (bajo $1.000/L) y se congela durante otoño e invierno</div>`;
+  }
+  if (autoVal !== 'no') {
+    html += `<div class="medida-item">El MEPCO seguirá operando: si el petróleo baja internacionalmente, la rebaja se traspasará a los precios internos</div>`;
+  }
+
+  cont.innerHTML = html;
+}
+
+// ──────────────────────────────────────────
+//  UTILS
+// ──────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById(id);
+  s.classList.remove('active');
+  void s.offsetWidth;
+  s.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function fmt(n) { return Math.round(n).toLocaleString('es-CL'); }
+
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  const steps = 36, duration = 800;
+  let step = 0;
+  const timer = setInterval(() => {
+    step++;
+    const progress = step / steps;
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = fmt(Math.round(target * eased));
+    if (step >= steps) { el.textContent = fmt(target); clearInterval(timer); }
+  }, duration / steps);
+}
+
+function restartQuiz() {
+  answers = {};
+  questionHistory = [];
+  document.getElementById('progress-bar').style.width = '0%';
+  showScreen('screen-intro');
+}
+
+function shareResult() {
+  const total = document.getElementById('total-number').textContent;
+  const text = `El alza de bencinas del jueves me cuesta $${total} pesos más al mes. ¿Y a ti? Calcula aquí →`;
+  if (navigator.share) {
+    navigator.share({ title: '¿Cuánto te pega el alza del jueves?', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-share');
+      const orig = btn.innerHTML;
+      btn.textContent = '¡Copiado!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    });
+  }
+}
+</script>
+</body>
+</html>
